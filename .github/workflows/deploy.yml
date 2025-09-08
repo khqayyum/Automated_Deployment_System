@@ -2,40 +2,75 @@ name: Deploy to AWS EC2 via CodeDeploy
 
 on:
   push:
-    branches: [ main ]
+    branches: [ "main" ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    env:
+      AWS_REGION: ${{ secrets.AWS_REGION }}
+      ARTIFACT_BUCKET: ${{ secrets.ARTIFACT_BUCKET }}
+      APPLICATION_NAME: ${{ secrets.APPLICATION_NAME }}
+      DEPLOYMENT_GROUP_NAME: ${{ secrets.DEPLOYMENT_GROUP_NAME }}
 
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Zip artifact
-        run: zip -r mywebapp.zip . -x ".git/*"
-
-      - name: Install AWS CLI
+      - name: Install AWS CLI v2
         run: |
-          sudo apt-get update -y
-          sudo apt-get install -y awscli
+          sudo apt-get update
+          sudo apt-get install -y zip unzip
+          curl -sL "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o awscliv2.zip
+          unzip -q awscliv2.zip
+          sudo ./aws/install --update
+          aws --version
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ vars.AWS_REGION }}
+          aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Upload to S3
+      - name: Build CodeDeploy bundle (.zip)
         run: |
-          aws s3 cp mywebapp.zip s3://${{ vars.ARTIFACT_BUCKET }}/mywebapp.zip --region ${{ vars.AWS_REGION }}
+          ZIP="mywebapp-${GITHUB_SHA}.zip"
+          echo "ZIP=$ZIP" >> $GITHUB_ENV
+          # include repo but skip git/github folders
+          zip -r "$ZIP" . -x ".git/*" ".github/*"
+          ls -lh "$ZIP"
+
+      - name: Upload artifact to S3
+        run: |
+          aws s3 cp "$ZIP" "s3://${ARTIFACT_BUCKET}/${ZIP}"
 
       - name: Create CodeDeploy deployment
+        id: deploy
         run: |
-          aws deploy create-deployment \
-            --application-name "${{ vars.APPLICATION_NAME }}" \
-            --deployment-group-name "${{ vars.DEPLOYMENT_GROUP_NAME }}" \
-            --s3-location bucket=${{ vars.ARTIFACT_BUCKET }},bundleType=zip,key=mywebapp.zip \
-            --region ${{ vars.AWS_REGION }}
+          DEPLOY_ID=$(aws deploy create-deployment \
+            --application-name "${APPLICATION_NAME}" \
+            --deployment-group-name "${DEPLOYMENT_GROUP_NAME}" \
+            --s3-location bucket="${ARTIFACT_BUCKET}",key="${ZIP}",bundleType=zip \
+            --query "deploymentId" --output text)
+          echo "deployment_id=$DEPLOY_ID" >> $GITHUB_OUTPUT
+          echo "Deployment ID: $DEPLOY_ID"
+
+      - name: Wait for deployment to finish (up to ~15m)
+        run: |
+          for i in {1..90}; do
+            STATUS=$(aws deploy get-deployment \
+              --deployment-id "${{ steps.deploy.outputs.deployment_id }}" \
+              --query "deploymentInfo.status" --output text)
+            echo "Status: $STATUS"
+            if [[ "$STATUS" == "Succeeded" || "$STATUS" == "Failed" ]]; then
+              break
+            fi
+            sleep 10
+          done
+          test "$STATUS" = "Succeeded" || exit 1
 
