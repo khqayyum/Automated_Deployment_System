@@ -1,4 +1,7 @@
 #!/bin/bash
 set -e
-systemctl stop nginx || true
-mkdir -p /usr/share/nginx/html
+
+# Clean old app files
+sudo rm -rf /usr/share/nginx/html/*
+sudo mkdir -p /usr/share/nginx/html
+
