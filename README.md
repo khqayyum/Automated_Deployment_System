@@ -62,6 +62,7 @@ See the Screenshots folder for:
 4. EC2 instance web output
 5. CloudWatch monitoring
 6. SNS email alerts
+7. Architecture
 
 ---
 
