@@ -55,7 +55,7 @@ flowchart LR
 ---
 
 ## Screenshots
-- See the Screenshots folder for:
+See the Screenshots folder for:
 1. GitHub Actions workflow run
 2. S3 bucket with artifacts
 3. CodeDeploy deployment logs
