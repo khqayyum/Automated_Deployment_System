@@ -8,18 +8,14 @@ It also sends **SNS email notifications** for deployment status and streams **Ng
 ---
 
 ## 🧱 Architecture
-
 ```mermaid
-flowchart LR
-  A[Developer (Git push)] -->|push main| B[GitHub Repo]
-  B -->|GitHub Actions| C[Zip artifact]
-  C -->|AWS CLI| D[CodeDeploy: CreateDeployment]
-  D -->|Lifecycle hooks| E[EC2 (Nginx)]
-  E -->|Logs| F[CloudWatch Logs]
-  D -->|Status events| G[SNS Email]
-
-  subgraph EC2 Instance
-    E1[Nginx /usr/share/nginx/html]
-    E2[CodeDeploy Agent]
-  end
+graph LR
+  A[Developer pushes code to GitHub] --> B[GitHub Actions Workflow]
+  B -->|Zips code & uploads| C[S3 Bucket]
+  C --> D[AWS CodeDeploy]
+  D --> E[EC2 Instance (Nginx Web Server)]
+  D --> F[SNS Notifications - Deployment Status]
+  G[CloudWatch Agent] --> H[CloudWatch Metrics & Alarms]
+  H -->|Trigger alert| F
 ```
+
