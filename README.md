@@ -64,6 +64,10 @@ flowchart LR
 - Use Elastic Load Balancer + Auto Scaling for high availability.
 - Replace static HTML with containerized apps (ECS/EKS).
 - Add security best practices (IAM roles, HTTPS via ACM, WAF).
+  
+---
+## License
+- This project is licensed under the MIT License – see the LICENSE file for details.
 
 
    
