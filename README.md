@@ -45,7 +45,7 @@ flowchart LR
 
 --- 
 ## How It Works
-1. Push changes to **main** in GitHub.
+1. Push changes to `main` in GitHub.
 2. GitHub Actions workflow zips code → uploads to S3 → triggers CodeDeploy.
 3. CodeDeploy executes lifecycle scripts (**before_install.sh**, **after_install.sh**, etc.).
 4. Updated files are deployed to /usr/share/nginx/html on EC2.
