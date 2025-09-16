@@ -1,11 +1,10 @@
 # MyWebApp
-GitHub → CodeDeploy → EC2 (with SNS + CloudWatch)
 
 [![Deploy](https://github.com/khqayyum/mywebapp/actions/workflows/deploy.yml/badge.svg)](./.github/workflows/deploy.yml)
 
 ## Overview
 This project demonstrates a **CI/CD pipeline** that auto-deploys a static web page to an **Amazon EC2 instance** running Nginx.  
-Every push to the `main` branch in GitHub automatically triggers deployment through **GitHub Actions → S3 → CodeDeploy → EC2**.  
+Every push to the `main` branch in **GitHub** automatically triggers deployment through **GitHub Actions → S3 → CodeDeploy → EC2**.  
 
 Additionally:  
 - **SNS** sends **email notifications** on deployment success/failure.  
