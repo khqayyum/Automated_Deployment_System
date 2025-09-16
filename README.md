@@ -35,7 +35,6 @@ flowchart LR
   CWM -->|Trigger Alert| SNS
 ```
 ---
-
 ## Services Used
 - **GitHub Actions** – CI/CD workflow runner.
 - **Amazon S3** – Stores deployment artifacts.
