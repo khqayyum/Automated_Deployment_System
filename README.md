@@ -11,7 +11,7 @@ It also sends **SNS email notifications** for deployment status and streams **Ng
 
 ```mermaid
 flowchart LR
-  A[Developer (Git push)] -->|push main| B[GitHub Repo]
+  A[Developer (''Git push'')] -->|push main| B[GitHub Repo]
   B -->|GitHub Actions| C[Zip artifact]
   C -->|AWS CLI| D[CodeDeploy: CreateDeployment]
   D -->|Lifecycle hooks| E[EC2 (Nginx)]
