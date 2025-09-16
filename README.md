@@ -13,7 +13,7 @@ graph LR
   A[Developer pushes code to GitHub] --> B[GitHub Actions Workflow]
   B -->|Zips code & uploads| C[S3 Bucket]
   C --> D[AWS CodeDeploy]
-  D --> E[EC2 Instance (Nginx Web Server)]
+  D --> E["EC2 Instance - Nginx Web Server"]
   D --> F[SNS Notifications - Deployment Status]
   G[CloudWatch Agent] --> H[CloudWatch Metrics & Alarms]
   H -->|Trigger alert| F
