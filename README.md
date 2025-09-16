@@ -55,7 +55,13 @@ flowchart LR
 ---
 
 ## Screenshots
-- Check Screenshots Folder
+- See the Screenshots folder for:
+1. GitHub Actions workflow run
+2. S3 bucket with artifacts
+3. CodeDeploy deployment logs
+4. EC2 instance web output
+5. CloudWatch monitoring
+6. SNS email alerts
 
 ---
 
