@@ -59,10 +59,11 @@ See the Screenshots folder for:
 1. GitHub Actions workflow run
 2. S3 bucket with artifacts
 3. CodeDeploy deployment logs
-4. EC2 instance web output
-5. CloudWatch monitoring
-6. SNS email alerts
-7. Architecture
+4. EC2 Instance
+5. EC2 instance web output
+6. CloudWatch monitoring
+7. SNS email alerts
+8. Architecture
 
 ---
 
