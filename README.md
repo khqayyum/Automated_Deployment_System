@@ -1,4 +1,4 @@
-# MyWebApp
+# Automated Deployment System
 
 [![Deploy](https://github.com/khqayyum/mywebapp/actions/workflows/deploy.yml/badge.svg)](./.github/workflows/deploy.yml)
 
